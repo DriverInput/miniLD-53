@@ -19,6 +19,10 @@ namespace miniLD_53
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        int screenWidth = 800, screenHeight = 600;
+
+        Map map;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -33,7 +37,7 @@ namespace miniLD_53
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            map = new Map();
 
             base.Initialize();
         }
@@ -47,7 +51,20 @@ namespace miniLD_53
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
+            graphics.ApplyChanges();
+            IsMouseVisible = true;
+
+            Tiles.Content = Content;
+
+            map.Generate(new int[,]{
+                {0,0,0,0,0},
+                {0,0,2,0,0},
+                {0,0,2,2,0},
+                {1,2,2,2,2},
+                {2,2,1,2,2},
+            }, 32);
         }
 
         /// <summary>
@@ -66,13 +83,12 @@ namespace miniLD_53
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
-            // TODO: Add your update logic here
-
-            base.Update(gameTime);
+            ///(foreach (CollisionTiles tile in map.CollisionTiles)
+           /// {
+          ///      player.Collision(tile.Rectangle, map.Width, map.Height);
+         ///   }
+        ///  
+       ///    base.Update(gameTime);
         }
 
         /// <summary>
@@ -83,8 +99,9 @@ namespace miniLD_53
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            map.Draw(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
